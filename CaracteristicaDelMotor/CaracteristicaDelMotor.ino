@@ -21,26 +21,29 @@ void setup()
 {
   pinMode(RPWM_Output, OUTPUT);
   pinMode(LPWM_Output, OUTPUT);
+    Serial.begin(9600);
+
 }
  
 void loop()
 {
   int sensorValue = analogRead(SENSOR_PIN);
- 
+  int Variable = (sensorValue - 512) / 2;
   // sensor value is in the range 0 to 1023
   // the lower half of it we use for reverse rotation; the upper half for forward rotation
-  if (sensorValue &lt; 512)
+  if (Variable>0)
   {
-    // reverse rotation
-    int reversePWM = -(sensorValue - 511) / 2;
+    
     analogWrite(LPWM_Output, 0);
-    analogWrite(RPWM_Output, reversePWM);
+    analogWrite(RPWM_Output, Variable);
+   
   }
   else
   {
-    // forward rotation
-    int forwardPWM = (sensorValue - 512) / 2;
+    Variable=0;
     analogWrite(RPWM_Output, 0);
-    analogWrite(LPWM_Output, forwardPWM);
+    analogWrite(LPWM_Output, 0);
   }
+    Serial.println(Variable); 
+  
 }
