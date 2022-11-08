@@ -3,14 +3,17 @@
 // Potenciometro conectado a GPIO 35
 const int portPin = 35;
 // Variables del control
-const int HighL = 25;
-const int LowL = 33;
+const int  RPWM_Output = 25;
+const int  LPWM_Output = 33;
 const int Pwm = 32;
 
-// Propiedades PWM
+// Propiedades PWM Manecilla 
 const int frecuencia = 5000;
-const int canal = 0;
+const int canal = 1;
 const int resolucion = 8;
+// Propiedades PWM Contra Manecilla 
+
+
 // Almacenamiento del valor de puerto (Rango de 0-4095)
 int potValor = 0;
 //
@@ -19,12 +22,17 @@ int Velocidad[ ] = {0,0,0,0,1,1,2,2,3,4,5,6,7,8,9,10,12,13,15,16,18,20,21,23,25,
 void setup() {
   // put your setup code here, to run once:
   //iniciación de comunicación serial a 9600 baudios
-  pinMode(HighL,OUTPUT);
-  pinMode(LowL,OUTPUT);
-  //configuramos la funcionalidad PWM
-  ledcSetup(canal, frecuencia, resolucion);
-  //Se asocia el canal al GPIO
-  ledcAttachPin(Pwm,canal);
+  pinMode(RPWM_Output,OUTPUT);
+  pinMode(LPWM_Output,OUTPUT);
+  //configuramos la funcionalidad PWM Manecilla
+  ledcSetup(0, frecuencia, resolucion);
+  //Se asocia el canal al GPIO Manecilla
+  ledcAttachPin( Pwm,0);
+  //configuramos la funcionalidad PWM ContrManecilla
+ // ledcSetup(1,frecuencia, resolucion);
+  //Se asocia el canal al GPIO Manecilla
+//  ledcAttachPin(LPWM_Output,1);
+  
   Serial.begin(9600);
 }
 
@@ -39,37 +47,40 @@ void loop() {
 
 
    // Lectura del valor en cada vuelta del bucle
-  potValor = analogRead(portPin)*255/4095;
+  //potValor = analogRead(portPin)*255/4095;
   // potValor = map(potValor,0,4095,200); // 0 =50 PWM y 4095 es un 200 PWM
-  Serial.println(potValor);  //Envío del valor al puerto serie
-   digitalWrite(HighL, LOW);  
-   digitalWrite(LowL, HIGH); 
-  ledcWrite(canal, potValor);  
+  //Serial.println(potValor);  //Envío del valor al puerto serie
+   //digitalWrite(HighL, LOW);  
+   //digitalWrite(LowL, HIGH); 
+  //ledcWrite(canal, potValor);  
   
 
- /*  
+  
 // Control de motor
   int Vpwm =0;
  for (int i=0;i<270;i++){
    //Giro a la derecha
    if (i<135){
-     digitalWrite(HighL, LOW);  
-     digitalWrite(LowL, HIGH);  
-          Vpwm = Velocidad[i];   
-      ledcWrite(canal, Vpwm);
+     digitalWrite(RPWM_Output, LOW);  
+     digitalWrite(LPWM_Output, HIGH);  
+
+          Vpwm = Velocidad[i];
+      //ledcWrite(0, 0);   
+      ledcWrite(0, Vpwm);
      }else{
 //Giro a la Izquierda 
   delay(10);  
-    digitalWrite(HighL, HIGH);  
-     digitalWrite(LowL, LOW); 
-      Vpwm = -Velocidad[i];     
-    ledcWrite(canal, Vpwm);
+      digitalWrite(RPWM_Output, HIGH);  
+      digitalWrite(LPWM_Output, LOW); 
+      Vpwm = -Velocidad[i];
+      //ledcWrite(1, 0);     
+      ledcWrite(0, Vpwm);
    }
    //Análisis de la gráfica de Velocidad   
   //Serial.println(Velocidad[i]); 
     delay(10);  
   }  
-  */
+  
 
   //delay(10);
 }
