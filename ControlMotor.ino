@@ -66,8 +66,8 @@ void loop() {
       ledcWrite(1, 0);
      }else{
     //Giro a la Izquierda 
-      stop();
-      delay(10);  
+      //stop();
+      //delay(10);  
       Vpwm = -Velocidad[i];
       ledcWrite(0, 0);     
       ledcWrite(1, Vpwm);
