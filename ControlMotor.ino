@@ -5,6 +5,7 @@
 // Variables del control
 const int  RPWM_Output = 2;
 const int  LPWM_Output = 4;
+const int  Fcarrera = 15;
 //const int Pwm = 32;
 
 // Propiedades PWM Manecilla 
@@ -33,20 +34,16 @@ void setup() {
   ledcSetup(1,frecuencia, resolucion);
   //Se asocia el canal al GPIO Manecilla
   ledcAttachPin(LPWM_Output,1);
+  //Seguridad
+  pinMode(Fcarrera,INPUT);
   
+  Inicio();
   
 }
 
 void loop() {
   
   //Prueba del perfil de velocidad
-  /*
- /for (int i=0;i<270;i++){
-   Serial.println(Velocidad[i]); 
-   delay(10);
- }*/
-
-
    // Lectura del valor en cada vuelta del bucle
   //potValor = analogRead(portPin)*255/4095;
   // potValor = map(potValor,0,4095,200); // 0 =50 PWM y 4095 es un 200 PWM
@@ -54,7 +51,7 @@ void loop() {
    //digitalWrite(HighL, LOW);  
    //digitalWrite(LowL, HIGH); 
   //ledcWrite(canal, potValor);  
-  
+ 
 // Control de motor
   int Vpwm =0;
  for (int i=0;i<270;i++){
@@ -79,7 +76,31 @@ void loop() {
   
 }
 
-void stop(){
+void Inicio(){
+       
+//inicio del programa
+int val=0;
+  while(val==0){
+      val=digitalRead(Fcarrera);
+      ledcWrite(0, 30);
+      ledcWrite(1, 0); 
+   }
       ledcWrite(0, 0);
       ledcWrite(1, 0);
+
+     for (int i=0;i<270;i++){
+   //Giro a la derecha
+   if (i<135){
+          Vpwm = Velocidad[i];
+      //ledcWrite(0, 0);   
+      ledcWrite(0, Vpwm);
+      ledcWrite(1, 0);
+     }else{
+    //Giro a la Izquierda 
+      //stop();
+      //delay(10);  
+      Vpwm = -Velocidad[i];
+      ledcWrite(0, 0);     
+      ledcWrite(1, Vpwm);
+   }       
 }
