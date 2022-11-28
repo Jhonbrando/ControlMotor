@@ -81,26 +81,28 @@ void Inicio(){
 //inicio del programa
 int val=0;
   while(val==0){
+    //Calibrar posición del motor
       val=digitalRead(Fcarrera);
       ledcWrite(0, 30);
       ledcWrite(1, 0); 
    }
+   //parar motor
       ledcWrite(0, 0);
       ledcWrite(1, 0);
-
-     for (int i=0;i<270;i++){
-   //Giro a la derecha
-   if (i<135){
-          Vpwm = Velocidad[i];
-      //ledcWrite(0, 0);   
-      ledcWrite(0, Vpwm);
-      ledcWrite(1, 0);
-     }else{
-    //Giro a la Izquierda 
-      //stop();
-      //delay(10);  
-      Vpwm = -Velocidad[i];
-      ledcWrite(0, 0);     
-      ledcWrite(1, Vpwm);
-   }       
+      delay(1000);
+   //Ir a posición intermedia
+      ledcWrite(0, 0);
+      ledcWrite(1, 30);
+        delay(3000);  
+         //parar motor
+      ledcWrite(0, 0);
+      ledcWrite(1, 0); 
+          
+    //volver a calibrar posición
+    while(val==0){
+    //Calibrar posición del motor
+      val=digitalRead(Fcarrera);
+      ledcWrite(0, 30);
+      ledcWrite(1, 0); 
+   }
 }
